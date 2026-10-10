@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1536, height=730">
+  <title>HATHEQ // ADHD Attention & Eye Gaze Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 1536px;
+      height: 730px;
+      background: #060913;
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .glow-1 {
+      position: absolute;
+      top: -80px;
+      left: 100px;
+      width: 500px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.22) 0%, rgba(2, 132, 199, 0) 70%);
+      pointer-events: none;
+    }
+    .glow-2 {
+      position: absolute;
+      bottom: -100px;
+      right: 80px;
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.16) 0%, rgba(56, 189, 248, 0) 70%);
+      pointer-events: none;
+    }
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    header {
+      height: 54px;
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(2, 132, 199, 0.5);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .session-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .session-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot-live {
+      width: 7px;
+      height: 7px;
+      background: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+    .sys-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+    .badge {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: #cbd5e1;
+    }
+    .badge-accent {
+      background: rgba(2, 132, 199, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    main {
+      flex: 1;
+      padding: 14px 24px;
+      display: grid;
+      grid-template-columns: 880px 1fr;
+      gap: 16px;
+      z-index: 5;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .camera-card {
+      flex: 1;
+      background: #090e1c;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .card-header {
+      height: 34px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+    .camera-display {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #0f1628 0%, #060912 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(11, 17, 32, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+    .tele-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .tele-label {
+      font-size: 8px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+    .tele-val {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .waveform-card {
+      height: 74px;
+      background: #090e1c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .waveform-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+    }
+
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .metric-card {
+      background: #090e1c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gauge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .gauge-circle {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+    }
+    .gauge-center-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .gauge-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .gauge-label {
+      font-size: 8.5px;
+      font-weight: 600;
+      color: #38bdf8;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .gauge-stats {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      font-weight: 600;
+    }
+    .bar-meta span:first-child { color: #94a3b8; }
+    .bar-meta span:last-child { color: #38bdf8; font-family: 'JetBrains Mono', monospace; }
+    .bar-track {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
+      border-radius: 99px;
+    }
+
+    .diag-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+    .diag-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .diag-name {
+      font-size: 8px;
+      color: #64748b;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+    }
+    .diag-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f1f5f9;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .diag-status {
+      font-size: 8px;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .history-card {
+      flex: 1;
+      background: #090e1c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+  <div class="grid-bg"></div>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M2 12c2.5-5 6.5-8 10-8s7.5 3 10 8c-2.5 5-6.5 8-10 8s-7.5-3-10-8Z"></path>
+        </svg>
+      </div>
+      <div class="brand-title">
+        HATHEQ
+        <span class="brand-tag">CV ENGINE v2.4</span>
+      </div>
+    </div>
+
+    <div class="session-info">
+      <div class="session-item">
+        <div class="dot-live"></div>
+        <span style="color: #38bdf8; font-weight: 600;">ACTIVE INFERENCE</span>
+      </div>
+      <div class="session-item">
+        <span>SUBJECT:</span>
+        <span style="color: #f8fafc; font-weight: 600;">ADHD-ASSESS // SUB_0714</span>
+      </div>
+      <div class="session-item">
+        <span>DURATION:</span>
+        <span style="color: #f8fafc; font-weight: 600;">00:24:18</span>
+      </div>
+    </div>
+
+    <div class="sys-badges">
+      <div class="badge">LATENCY: 14.2ms</div>
+      <div class="badge">FPS: 60.0</div>
+      <div class="badge badge-accent">CALIBRATION: 99.4%</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="left-panel">
+      <div class="camera-card">
+        <div class="card-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <span style="color: #ffffff; font-weight: 600;">HIGH-RESOLUTION OCULAR &amp; FACIAL MESH PIPELINE</span>
+          </div>
+          <div style="color: #38bdf8; font-weight: 600;">104 LANDMARK POINTS • SUB-MM SACCADES</div>
+        </div>
+
+        <div class="camera-display">
+          <svg width="860" height="420" viewBox="0 0 860 420" fill="none">
+            <defs>
+              <radialGradient id="faceShade" cx="430" cy="205" r="145" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1e293b"/>
+                <stop offset="65%" stop-color="#0f172a"/>
+                <stop offset="100%" stop-color="#070a13"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Background Target Geometry -->
+            <rect width="860" height="420" fill="#080c16"/>
+            <path d="M 0 210 L 860 210 M 430 0 L 430 420" stroke="rgba(255,255,255,0.03)" stroke-dasharray="4 4"/>
+            <circle cx="430" cy="210" r="160" stroke="rgba(56,189,248,0.08)" stroke-width="1"/>
+            <circle cx="430" cy="210" r="90" stroke="rgba(56,189,248,0.12)" stroke-width="1"/>
+
+            <!-- Silhouette & Shoulders -->
+            <path d="M 270 420 C 270 335 340 315 375 310 L 485 310 C 520 315 590 335 590 420 Z" fill="#0f172a"/>
+            <ellipse cx="430" cy="205" rx="108" ry="132" fill="url(#faceShade)" stroke="rgba(56,189,248,0.25)" stroke-width="1.5"/>
+
+            <!-- 3D Facial Mesh Lines -->
+            <path d="M 365 145 Q 395 130 420 142 M 440 142 Q 465 130 495 145" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+            <path d="M 335 195 C 340 275 380 325 430 335 C 480 325 520 275 525 195" stroke="#0284c7" stroke-width="1.5"/>
+            <path d="M 385 180 L 430 240 L 475 180" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+            <path d="M 375 220 L 430 260 L 485 220" stroke="rgba(56,189,248,0.3)" stroke-width="1"/>
+            <path d="M 430 145 L 430 250 M 418 252 Q 430 260 442 252" stroke="#38bdf8" stroke-width="1.5"/>
+            <path d="M 395 295 Q 430 285 465 295 Q 430 310 395 295 Z" stroke="rgba(56,189,248,0.8)" stroke-width="1.5" fill="rgba(2,132,199,0.15)"/>
+
+            <!-- Landmark Dots -->
+            <g fill="#38bdf8">
+              <circle cx="365" cy="145" r="2.5"/><circle cx="395" cy="135" r="2.5"/><circle cx="420" cy="142" r="2.5"/>
+              <circle cx="440" cy="142" r="2.5"/><circle cx="465" cy="135" r="2.5"/><circle cx="495" cy="145" r="2.5"/>
+              <circle cx="430" cy="165" r="2.5"/><circle cx="430" cy="195" r="2.5"/><circle cx="430" cy="225" r="2.5"/><circle cx="430" cy="250" r="3"/>
+              <circle cx="395" cy="295" r="2.5"/><circle cx="430" cy="290" r="2.5"/><circle cx="465" cy="295" r="2.5"/>
+              <circle cx="430" cy="335" r="3"/>
+            </g>
+
+            <!-- Eyes & Gaze Tracking -->
+            <ellipse cx="385" cy="185" rx="24" ry="14" stroke="#38bdf8" stroke-width="2" fill="#0f172a"/>
+            <circle cx="387" cy="185" r="9" stroke="#0284c7" stroke-width="1.5" fill="#070a13"/>
+            <circle cx="388" cy="185" r="4.5" fill="#38bdf8"/>
+            <circle cx="389" cy="183" r="1.5" fill="#ffffff"/>
+
+            <ellipse cx="475" cy="185" rx="24" ry="14" stroke="#38bdf8" stroke-width="2" fill="#0f172a"/>
+            <circle cx="473" cy="185" r="9" stroke="#0284c7" stroke-width="1.5" fill="#070a13"/>
+            <circle cx="472" cy="185" r="4.5" fill="#38bdf8"/>
+            <circle cx="473" cy="183" r="1.5" fill="#ffffff"/>
+
+            <!-- Gaze Vector Rays (Forward Convergence) -->
+            <line x1="388" y1="185" x2="430" y2="72" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 3"/>
+            <line x1="472" y1="185" x2="430" y2="72" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 3"/>
+            <circle cx="430" cy="72" r="6" stroke="#38bdf8" stroke-width="2" fill="rgba(2,132,199,0.4)"/>
+            <circle cx="430" cy="72" r="2.5" fill="#ffffff"/>
+
+            <!-- Focal HUD Target Badge (Clear, No Overlap) -->
+            <rect x="365" y="24" width="130" height="22" rx="4" fill="rgba(2,132,199,0.9)" stroke="#38bdf8" stroke-width="1"/>
+            <text x="430" y="39" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" text-anchor="middle">FOCAL // 98.4% STABLE</text>
+
+            <!-- Face Bounding Box HUD (Clean Placement) -->
+            <rect x="305" y="80" width="250" height="285" rx="8" stroke="rgba(56,189,248,0.7)" stroke-width="1.5" fill="none"/>
+            <rect x="305" y="58" width="145" height="19" rx="4" fill="rgba(2,132,199,0.9)"/>
+            <text x="312" y="71" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700">AI DETECT: 99.4% CONF</text>
+
+            <!-- Corner brackets -->
+            <path d="M 303 90 L 303 78 L 315 78 M 543 78 L 555 78 L 555 90 M 303 355 L 303 367 L 315 367 M 543 367 L 555 367 L 555 355" stroke="#38bdf8" stroke-width="2.5"/>
+
+            <!-- Vector Readouts -->
+            <g transform="translate(170, 170)">
+              <rect width="115" height="38" rx="6" fill="rgba(15,23,42,0.95)" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+              <text x="10" y="16" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600">LEFT PUPIL VECTOR</text>
+              <text x="10" y="30" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">X: 184.2 mm</text>
+            </g>
+            <g transform="translate(575, 170)">
+              <rect width="115" height="38" rx="6" fill="rgba(15,23,42,0.95)" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+              <text x="10" y="16" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600">RIGHT PUPIL VECTOR</text>
+              <text x="10" y="30" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">X: 248.5 mm</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="telemetry-row">
+          <div class="tele-item">
+            <span class="tele-label">HEAD POSE (YAW/PITCH/ROLL)</span>
+            <span class="tele-val">+2.4° / -1.1° / +0.3°</span>
+          </div>
+          <div class="tele-item">
+            <span class="tele-label">PUPIL DIAMETER (L / R)</span>
+            <span class="tele-val">3.42mm / 3.41mm</span>
+          </div>
+          <div class="tele-item">
+            <span class="tele-label">SACCADIC DRIFT VELOCITY</span>
+            <span class="tele-val">18.4 deg/s (STABLE)</span>
+          </div>
+          <div class="tele-item">
+            <span class="tele-label">ATTENTION STATE</span>
+            <span class="tele-val" style="color: #38bdf8;">OPTIMAL FOCUS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="waveform-card">
+        <div class="waveform-header">
+          <span style="color: #94a3b8; font-weight: 600;">REAL-TIME OCULAR SACCADE &amp; FIXATION CONTINUUM</span>
+          <span style="color: #38bdf8; font-size: 9px; background: rgba(2,132,199,0.15); padding: 2px 6px; border-radius: 4px;">SAMPLING: 120 HZ</span>
+        </div>
+        <svg width="100%" height="34" viewBox="0 0 850 34" fill="none">
+          <path d="M 0 17 Q 50 14 100 17 T 200 16 T 300 18 T 400 8 T 430 26 T 460 16 T 550 17 T 650 16 T 730 8 T 760 26 T 790 16 T 850 17" stroke="#0284c7" stroke-width="2" fill="none"/>
+          <path d="M 0 17 Q 50 12 100 17 T 200 14 T 300 17 T 400 6 T 430 28 T 460 14 T 550 16 T 650 14 T 730 6 T 760 28 T 790 14 T 850 17" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.9" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="metric-card">
+        <div class="card-title">
+          <span>COGNITIVE FOCUS INDEX</span>
+          <span style="color: #38bdf8;">REAL-TIME SCORE</span>
+        </div>
+
+        <div class="gauge-wrapper">
+          <div class="gauge-circle">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="8" fill="none"/>
+              <circle cx="50" cy="50" r="40" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" fill="none"
+                      stroke-dasharray="251.3" stroke-dashoffset="15" transform="rotate(-90 50 50)"/>
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#0284c7"/>
+                  <stop offset="100%" stop-color="#38bdf8"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="gauge-center-text">
+              <span class="gauge-number">94<span style="font-size: 15px; color: #38bdf8;">%</span></span>
+              <span class="gauge-label">HIGH FOCUS</span>
+            </div>
+          </div>
+
+          <div class="gauge-stats">
+            <div class="bar-item">
+              <div class="bar-meta">
+                <span>Visual Fixation</span>
+                <span>96%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 96%;"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta">
+                <span>Task Engagement</span>
+                <span>92%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 92%;"></div></div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-meta">
+                <span>Distraction Resistance</span>
+                <span>94%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 94%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="card-title">
+          <span>ADHD BEHAVIORAL BIOMARKERS</span>
+          <span style="color: #94a3b8;">AUTOMATED INFERENCE</span>
+        </div>
+
+        <div class="diag-grid">
+          <div class="diag-box">
+            <span class="diag-name">GAZE DISPERSION</span>
+            <span class="diag-value">1.8°</span>
+            <span class="diag-status">CONCENTRATED</span>
+          </div>
+          <div class="diag-box">
+            <span class="diag-name">BLINK RATE</span>
+            <span class="diag-value">14 / MIN</span>
+            <span class="diag-status">OPTIMAL RELAXED</span>
+          </div>
+          <div class="diag-box">
+            <span class="diag-name">MICRO-SACCADES</span>
+            <span class="diag-value">1.2 / SEC</span>
+            <span class="diag-status">LOW DRIFT RATE</span>
+          </div>
+          <div class="diag-box">
+            <span class="diag-name">DIAGNOSTIC STATUS</span>
+            <span class="diag-value" style="color: #38bdf8; font-size: 12px;">SUSTAINED</span>
+            <span class="diag-status">NO DEFICIT FLAGGED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-card">
+        <div class="card-title" style="margin-bottom: 6px;">
+          <span>30-MIN STABILITY TIMELINE</span>
+          <span style="color: #38bdf8;">AVG: 91.8%</span>
+        </div>
+
+        <svg width="100%" height="55" viewBox="0 0 540 55" fill="none">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0284c7" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M 0 38 Q 60 26 120 20 T 240 28 T 360 12 T 450 18 T 540 10 L 540 55 L 0 55 Z" fill="url(#areaGrad)"/>
+          <path d="M 0 38 Q 60 26 120 20 T 240 28 T 360 12 T 450 18 T 540 10" stroke="#38bdf8" stroke-width="2" fill="none"/>
+          <circle cx="120" cy="20" r="3.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+          <circle cx="240" cy="28" r="3.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+          <circle cx="360" cy="12" r="3.5" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+          <circle cx="540" cy="10" r="3.5" fill="#38bdf8"/>
+        </svg>
+
+        <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #64748b;">
+          <span>00:00 (START)</span>
+          <span>10:00 (READING)</span>
+          <span>20:00 (TASK)</span>
+          <span>NOW</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

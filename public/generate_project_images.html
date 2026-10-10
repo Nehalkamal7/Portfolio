@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Images Canvas Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #050811;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+    .status-box {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      padding: 16px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+    }
+    canvas {
+      display: block;
+      margin-bottom: 30px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="status-box" id="status">Initializing Canvas Renderers...</div>
+
+  <h3>1. HATHEQ (ADHD Real App Screens)</h3>
+  <canvas id="c-hatheq" width="1600" height="900"></canvas>
+
+  <h3>2. SMART ATTENDANCE (Face Recognition Dashboard)</h3>
+  <canvas id="c-attendance" width="1600" height="900"></canvas>
+
+  <h3>3. E-COMMERCE ML ANALYTICS (Streamlit Dashboard)</h3>
+  <canvas id="c-ecommerce" width="1600" height="900"></canvas>
+
+  <h3>4. SEBA (Smart AI Tutor Platform & Study Assistant)</h3>
+  <canvas id="c-seba" width="1600" height="900"></canvas>
+
+  <h3>5. COVID-19 ANALYTICS (Epidemiological Curves & Heatmap)</h3>
+  <canvas id="c-covid" width="1600" height="900"></canvas>
+
+  <script>
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = (e) => reject(new Error('Failed to load ' + src));
+        img.src = src;
+      });
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function drawWindowFrame(ctx, x, y, w, h, title) {
+      // Outer shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+      ctx.shadowBlur = 40;
+      ctx.shadowOffsetY = 15;
+      
+      // Frame background
+      ctx.fillStyle = '#0b0f19';
+      roundRect(ctx, x, y, w, h, 14);
+      ctx.fill();
+      ctx.restore();
+
+      // Border
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      ctx.lineWidth = 1.5;
+      roundRect(ctx, x, y, w, h, 14);
+      ctx.stroke();
+
+      // Top title bar
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.beginPath();
+      ctx.moveTo(x + 14, y);
+      ctx.lineTo(x + w - 14, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + 14);
+      ctx.lineTo(x + w, y + 42);
+      ctx.lineTo(x, y + 42);
+      ctx.lineTo(x, y + 14);
+      ctx.quadraticCurveTo(x, y, x + 14, y);
+      ctx.closePath();
+      ctx.fill();
+
+      // Divider line
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, y + 42);
+      ctx.lineTo(x + w, y + 42);
+      ctx.stroke();
+
+      // Window dots
+      const dots = ['#ef4444', '#f59e0b', '#10b981'];
+      dots.forEach((color, i) => {
+        ctx.beginPath();
+        ctx.arc(x + 22 + i * 18, y + 21, 5.5, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      });
+
+      // Title
+      if (title) {
+        ctx.font = '600 13px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'center';
+        ctx.fillText(title, x + w / 2, y + 26);
+      }
+    }
+
+    async function sendToServer(canvas, filename) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(async (blob) => {
+          try {
+            const resp = await fetch(`http://localhost:3333/save?name=${filename}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'image/jpeg' },
+              body: blob
+            });
+            const data = await resp.json();
+            resolve(data);
+          } catch(e) {
+            reject(e);
+          }
+        }, 'image/jpeg', 0.96);
+      });
+    }
+
+    async function renderAll() {
+      const status = document.getElementById('status');
+      status.innerText = 'Loading images...';
+
+      const [
+        hatheq1, hatheq2,
+        attendanceMain,
+        ecommerceImg,
+        seba1, seba4,
+        covidTrends, covidHeatmap
+      ] = await Promise.all([
+        loadImage('/projects/raw/hatheq_readme_1.png'),
+        loadImage('/projects/raw/hatheq_readme_2.png'),
+        loadImage('/projects/raw/attendance_main.png'),
+        loadImage('/projects/raw/ecommerce_readme.png'),
+        loadImage('/projects/raw/seba_1.png'),
+        loadImage('/projects/raw/seba_4.png'),
+        loadImage('/projects/raw/covid_trends.png'),
+        loadImage('/projects/raw/covid_heatmap.png'),
+      ]);
+
+      status.innerText = 'Rendering 1/5: HATHEQ...';
+
+      // ==========================================
+      // 1. HATHEQ Canvas
+      // ==========================================
+      {
+        const canvas = document.getElementById('c-hatheq');
+        const ctx = canvas.getContext('2d');
+        
+        // Background
+        const bgGrad = ctx.createLinearGradient(0, 0, 1600, 900);
+        bgGrad.addColorStop(0, '#040711');
+        bgGrad.addColorStop(0.5, '#070d1d');
+        bgGrad.addColorStop(1, '#050914');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Ambient cyber radial glows
+        const glow1 = ctx.createRadialGradient(800, 480, 50, 800, 480, 600);
+        glow1.addColorStop(0, 'rgba(2, 132, 199, 0.22)');
+        glow1.addColorStop(0.6, 'rgba(56, 189, 248, 0.08)');
+        glow1.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow1;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Tech grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < 1600; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 900); ctx.stroke();
+        }
+        for (let y = 0; y < 900; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke();
+        }
+
+        // Header bar
+        ctx.fillStyle = 'rgba(11, 18, 33, 0.85)';
+        ctx.fillRect(60, 40, 1480, 66);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, 60, 40, 1480, 66, 12);
+        ctx.stroke();
+
+        // Header branding
+        ctx.font = '800 20px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'left';
+        ctx.fillText('HATHEQ // ADHD COGNITIVE ATTENTION & EYE GAZE ENGINE', 90, 80);
+
+        // Header badge
+        ctx.fillStyle = 'rgba(2, 132, 199, 0.25)';
+        roundRect(ctx, 770, 58, 140, 30, 6);
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1;
+        roundRect(ctx, 770, 58, 140, 30, 6);
+        ctx.stroke();
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText('30+ FPS REAL-TIME', 785, 78);
+
+        // Header metrics right side
+        ctx.font = '600 13px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'right';
+        ctx.fillText('ACCURACY: 94%   |   FACIAL MESH: 104 PTS   |   PUPIL TRACKING: SUB-MM', 1510, 79);
+
+        // Draw 2 Smartphone Device Frames containing real screens
+        const phoneW = 380;
+        const phoneH = 680;
+        const phoneY = 145;
+
+        // Phone 1 (Screen 1 - Start Test & Intro)
+        const p1X = 400;
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+        ctx.shadowBlur = 45;
+        ctx.shadowOffsetY = 20;
+        ctx.fillStyle = '#0a0f1d';
+        roundRect(ctx, p1X, phoneY, phoneW, phoneH, 32);
+        ctx.fill();
+        ctx.restore();
+
+        // Phone 1 border
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 3;
+        roundRect(ctx, p1X, phoneY, phoneW, phoneH, 32);
+        ctx.stroke();
+
+        // Clip and draw image 1
+        ctx.save();
+        roundRect(ctx, p1X + 8, phoneY + 8, phoneW - 16, phoneH - 16, 26);
+        ctx.clip();
+        ctx.drawImage(hatheq1, p1X + 8, phoneY + 8, phoneW - 16, phoneH - 16);
+        ctx.restore();
+
+        // Phone 2 (Screen 2 - Question & Reading Gaze Cam)
+        const p2X = 820;
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+        ctx.shadowBlur = 45;
+        ctx.shadowOffsetY = 20;
+        ctx.fillStyle = '#0a0f1d';
+        roundRect(ctx, p2X, phoneY, phoneW, phoneH, 32);
+        ctx.fill();
+        ctx.restore();
+
+        // Phone 2 border
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 3;
+        roundRect(ctx, p2X, phoneY, phoneW, phoneH, 32);
+        ctx.stroke();
+
+        // Clip and draw image 2
+        ctx.save();
+        roundRect(ctx, p2X + 8, phoneY + 8, phoneW - 16, phoneH - 16, 26);
+        ctx.clip();
+        ctx.drawImage(hatheq2, p2X + 8, phoneY + 8, phoneW - 16, phoneH - 16);
+        ctx.restore();
+
+        // Left Telemetry Glass Card
+        const lCardX = 60;
+        const lCardY = 250;
+        ctx.save();
+        ctx.fillStyle = 'rgba(13, 21, 38, 0.88)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 25;
+        roundRect(ctx, lCardX, lCardY, 300, 360, 16);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, lCardX, lCardY, 300, 360, 16);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.font = '800 15px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#38bdf8';
+        ctx.textAlign = 'left';
+        ctx.fillText('BIOMETRIC GAZE HUD', lCardX + 24, lCardY + 40);
+
+        ctx.font = '500 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText('Sub-Millimeter Pupil Radius', lCardX + 24, lCardY + 68);
+
+        // Stat box 1
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+        roundRect(ctx, lCardX + 20, lCardY + 85, 260, 65, 8);
+        ctx.fill();
+        ctx.font = '800 24px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('94.2%', lCardX + 35, lCardY + 124);
+        ctx.font = '600 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText('FOCUS INDEX STABILITY', lCardX + 130, lCardY + 120);
+
+        // Stat box 2
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+        roundRect(ctx, lCardX + 20, lCardY + 165, 260, 65, 8);
+        ctx.fill();
+        ctx.font = '800 24px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('104', lCardX + 35, lCardY + 204);
+        ctx.font = '600 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText('FACIAL LANDMARKS', lCardX + 130, lCardY + 200);
+
+        // Stat box 3
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+        roundRect(ctx, lCardX + 20, lCardY + 245, 260, 85, 8);
+        ctx.fill();
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#10b981';
+        ctx.fillText('● REAL-TIME CAMERA FEED', lCardX + 35, lCardY + 275);
+        ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText('Non-invasive ADHD screening for', lCardX + 35, lCardY + 298);
+        ctx.fillText('children & students during reading.', lCardX + 35, lCardY + 316);
+
+        // Right Telemetry Glass Card
+        const rCardX = 1240;
+        const rCardY = 250;
+        ctx.save();
+        ctx.fillStyle = 'rgba(13, 21, 38, 0.88)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 25;
+        roundRect(ctx, rCardX, rCardY, 300, 360, 16);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, rCardX, rCardY, 300, 360, 16);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.font = '800 15px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#38bdf8';
+        ctx.textAlign = 'left';
+        ctx.fillText('CLINICAL PROTOCOL', rCardX + 24, rCardY + 40);
+
+        ctx.font = '500 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText('DSM-5 ADHD Screening Flow', rCardX + 24, rCardY + 68);
+
+        // List items
+        const items = [
+          { title: '1. Structured Survey', desc: '48 behavioral focus markers' },
+          { title: '2. Arabic Reading Sample', desc: 'Dynamic text fixation test' },
+          { title: '3. Micro-Saccade Tracking', desc: 'Pupil jitter & drift analysis' },
+          { title: '4. Cognitive Diagnostics', desc: 'Automated diagnostic report' }
+        ];
+
+        items.forEach((it, idx) => {
+          const itemY = rCardY + 95 + idx * 60;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+          roundRect(ctx, rCardX + 20, itemY, 260, 50, 8);
+          ctx.fill();
+          ctx.font = '700 12px "Plus Jakarta Sans", sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText(it.title, rCardX + 35, itemY + 22);
+          ctx.font = '500 11px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillText(it.desc, rCardX + 35, itemY + 40);
+        });
+
+        // Bottom Banner
+        ctx.fillStyle = 'rgba(11, 18, 33, 0.9)';
+        roundRect(ctx, 60, 840, 1480, 42, 8);
+        ctx.fill();
+        ctx.font = '600 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#38bdf8';
+        ctx.textAlign = 'center';
+        ctx.fillText('AUTHORED BY NEHAL KAMAL  •  AUTHENTIC GITHUB SYSTEM @NEHALKAMAL7/HATHEQ-PROJECT  •  COMPUTER VISION & CLINICAL AI', 800, 866);
+
+        await sendToServer(canvas, 'hatheq.jpg');
+      }
+
+      status.innerText = 'Rendering 2/5: SMART ATTENDANCE...';
+
+      // ==========================================
+      // 2. SMART ATTENDANCE Canvas
+      // ==========================================
+      {
+        const canvas = document.getElementById('c-attendance');
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const bgGrad = ctx.createLinearGradient(0, 0, 1600, 900);
+        bgGrad.addColorStop(0, '#060913');
+        bgGrad.addColorStop(0.5, '#0b1122');
+        bgGrad.addColorStop(1, '#050811');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Purple and cyan ambient glow
+        const glow = ctx.createRadialGradient(800, 450, 100, 800, 450, 700);
+        glow.addColorStop(0, 'rgba(99, 102, 241, 0.18)');
+        glow.addColorStop(0.5, 'rgba(56, 189, 248, 0.08)');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < 1600; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 900); ctx.stroke();
+        }
+        for (let y = 0; y < 900; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke();
+        }
+
+        // Window Frame
+        const winX = 140;
+        const winY = 60;
+        const winW = 1320;
+        const winH = 780;
+        drawWindowFrame(ctx, winX, winY, winW, winH, 'Smart Attendance System // Real-Time Biometric Recognition & History Telemetry');
+
+        // Draw attendance_main.png inside window
+        const imgPadding = 12;
+        const imgX = winX + imgPadding;
+        const imgY = winY + 42 + imgPadding;
+        const imgW = winW - (imgPadding * 2);
+        const imgH = winH - 42 - (imgPadding * 2);
+
+        ctx.save();
+        roundRect(ctx, imgX, imgY, imgW, imgH, 10);
+        ctx.clip();
+        ctx.drawImage(attendanceMain, imgX, imgY, imgW, imgH);
+        ctx.restore();
+
+        // Overlay status badge top right of window
+        ctx.save();
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+        roundRect(ctx, winX + winW - 240, winY + 8, 140, 26, 6);
+        ctx.fill();
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1;
+        roundRect(ctx, winX + winW - 240, winY + 8, 140, 26, 6);
+        ctx.stroke();
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#10b981';
+        ctx.textAlign = 'center';
+        ctx.fillText('● 99.1% RECOGNITION', winX + winW - 170, winY + 25);
+        ctx.restore();
+
+        // Bottom feature bar
+        ctx.fillStyle = 'rgba(11, 17, 32, 0.9)';
+        roundRect(ctx, 140, 852, 1320, 36, 8);
+        ctx.fill();
+        ctx.font = '600 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'center';
+        ctx.fillText('OPENCV REAL-TIME WEBCAM  •  DEEP COSINE EMBEDDINGS  •  FLASK WEB DASHBOARD  •  AUTOMATED LOGS DATABASE', 800, 875);
+
+        await sendToServer(canvas, 'smart-attendance.jpg');
+      }
+
+      status.innerText = 'Rendering 3/5: E-COMMERCE ML...';
+
+      // ==========================================
+      // 3. E-COMMERCE ML Canvas
+      // ==========================================
+      {
+        const canvas = document.getElementById('c-ecommerce');
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const bgGrad = ctx.createLinearGradient(0, 0, 1600, 900);
+        bgGrad.addColorStop(0, '#060814');
+        bgGrad.addColorStop(0.5, '#0d1326');
+        bgGrad.addColorStop(1, '#050711');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Violet and blue ambient glow
+        const glow = ctx.createRadialGradient(800, 450, 100, 800, 450, 700);
+        glow.addColorStop(0, 'rgba(147, 51, 234, 0.16)');
+        glow.addColorStop(0.5, 'rgba(37, 99, 235, 0.12)');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < 1600; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 900); ctx.stroke();
+        }
+        for (let y = 0; y < 900; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke();
+        }
+
+        // Window Frame
+        const winX = 140;
+        const winY = 60;
+        const winW = 1320;
+        const winH = 780;
+        drawWindowFrame(ctx, winX, winY, winW, winH, 'Advanced E-Commerce ML Analytics // Customer Segmentation & RFM Predictor');
+
+        // Draw ecommerce_readme.png inside window
+        const imgPadding = 12;
+        const imgX = winX + imgPadding;
+        const imgY = winY + 42 + imgPadding;
+        const imgW = winW - (imgPadding * 2);
+        const imgH = winH - 42 - (imgPadding * 2);
+
+        ctx.save();
+        roundRect(ctx, imgX, imgY, imgW, imgH, 10);
+        ctx.clip();
+        ctx.drawImage(ecommerceImg, imgX, imgY, imgW, imgH);
+        ctx.restore();
+
+        // Top right badge
+        ctx.save();
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.2)';
+        roundRect(ctx, winX + winW - 250, winY + 8, 150, 26, 6);
+        ctx.fill();
+        ctx.strokeStyle = '#c084fc';
+        ctx.lineWidth = 1;
+        roundRect(ctx, winX + winW - 250, winY + 8, 150, 26, 6);
+        ctx.stroke();
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#c084fc';
+        ctx.textAlign = 'center';
+        ctx.fillText('K-MEANS + RFM ML', winX + winW - 175, winY + 25);
+        ctx.restore();
+
+        // Bottom feature bar
+        ctx.fillStyle = 'rgba(11, 17, 32, 0.9)';
+        roundRect(ctx, 140, 852, 1320, 36, 8);
+        ctx.fill();
+        ctx.font = '600 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'center';
+        ctx.fillText('RFM FEATURE ENGINEERING  •  CUSTOMER CHURN PREDICTION  •  NEURAL CLUSTERING  •  STREAMLIT INTERACTIVE UI', 800, 875);
+
+        await sendToServer(canvas, 'ecommerce-analytics.jpg');
+      }
+
+      status.innerText = 'Rendering 4/5: SEBA AI TUTOR...';
+
+      // ==========================================
+      // 4. SEBA Canvas
+      // ==========================================
+      {
+        const canvas = document.getElementById('c-seba');
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const bgGrad = ctx.createLinearGradient(0, 0, 1600, 900);
+        bgGrad.addColorStop(0, '#060a17');
+        bgGrad.addColorStop(0.5, '#0c142c');
+        bgGrad.addColorStop(1, '#070a18');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Warm amber and sapphire glow
+        const glow = ctx.createRadialGradient(600, 400, 50, 600, 400, 600);
+        glow.addColorStop(0, 'rgba(245, 158, 11, 0.15)');
+        glow.addColorStop(0.5, 'rgba(37, 99, 235, 0.12)');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Tech grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < 1600; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 900); ctx.stroke();
+        }
+        for (let y = 0; y < 900; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke();
+        }
+
+        // Header bar
+        ctx.fillStyle = 'rgba(11, 18, 35, 0.85)';
+        ctx.fillRect(60, 40, 1480, 66);
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.3)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, 60, 40, 1480, 66, 12);
+        ctx.stroke();
+
+        ctx.font = '800 20px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'left';
+        ctx.fillText('SEBA // SMART AI TUTORING & ADAPTIVE STEM PLATFORM', 90, 80);
+
+        ctx.font = '600 13px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#f59e0b';
+        ctx.textAlign = 'right';
+        ctx.fillText('SOCRATIC DIALOGUE  |  FAISS VECTOR SEARCH  |  EGYPT STEM CURRICULUM', 1510, 79);
+
+        // Dual window arrangement:
+        // Window 1 (Left - SEBA Landing page seba1)
+        const w1X = 60;
+        const w1Y = 135;
+        const w1W = 820;
+        const w1H = 690;
+        drawWindowFrame(ctx, w1X, w1Y, w1W, w1H, 'SEBA Student Portal // Learn Smarter, Achieve More');
+        ctx.save();
+        roundRect(ctx, w1X + 10, w1Y + 52, w1W - 20, w1H - 62, 8);
+        ctx.clip();
+        ctx.drawImage(seba1, w1X + 10, w1Y + 52, w1W - 20, w1H - 62);
+        ctx.restore();
+
+        // Window 2 (Right - SEBA AI Study Assistant seba4)
+        const w2X = 905;
+        const w2Y = 135;
+        const w2W = 635;
+        const w2H = 690;
+        drawWindowFrame(ctx, w2X, w2Y, w2W, w2H, 'SEBA AI Study Assistant // Socratic Dialogue');
+        ctx.save();
+        roundRect(ctx, w2X + 10, w2Y + 52, w2W - 20, w2H - 62, 8);
+        ctx.clip();
+        ctx.drawImage(seba4, w2X + 10, w2Y + 52, w2W - 20, w2H - 62);
+        ctx.restore();
+
+        // Bottom banner
+        ctx.fillStyle = 'rgba(11, 18, 35, 0.9)';
+        roundRect(ctx, 60, 845, 1480, 38, 8);
+        ctx.fill();
+        ctx.font = '600 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#f59e0b';
+        ctx.textAlign = 'center';
+        ctx.fillText('AUTHORED BY NEHAL KAMAL  •  AUTHENTIC GITHUB SYSTEM @NEHALKAMAL7/SEBA-PROJECT  •  ADAPTIVE NLP & EDTECH', 800, 869);
+
+        await sendToServer(canvas, 'seba.jpg');
+      }
+
+      status.innerText = 'Rendering 5/5: COVID-19 ANALYTICS...';
+
+      // ==========================================
+      // 5. COVID-19 Canvas
+      // ==========================================
+      {
+        const canvas = document.getElementById('c-covid');
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const bgGrad = ctx.createLinearGradient(0, 0, 1600, 900);
+        bgGrad.addColorStop(0, '#060a14');
+        bgGrad.addColorStop(0.5, '#0a1324');
+        bgGrad.addColorStop(1, '#050812');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Emerald and cyan ambient glow
+        const glow = ctx.createRadialGradient(800, 450, 80, 800, 450, 700);
+        glow.addColorStop(0, 'rgba(16, 185, 129, 0.16)');
+        glow.addColorStop(0.5, 'rgba(56, 189, 248, 0.08)');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, 1600, 900);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < 1600; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 900); ctx.stroke();
+        }
+        for (let y = 0; y < 900; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke();
+        }
+
+        // Header bar
+        ctx.fillStyle = 'rgba(10, 17, 30, 0.85)';
+        ctx.fillRect(60, 40, 1480, 66);
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.3)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, 60, 40, 1480, 66, 12);
+        ctx.stroke();
+
+        ctx.font = '800 20px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'left';
+        ctx.fillText('COVID-19 EPIDEMIOLOGICAL ANALYTICS // DATA SCIENCE & VISUALIZATION', 90, 80);
+
+        ctx.font = '600 13px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#10b981';
+        ctx.textAlign = 'right';
+        ctx.fillText('TIME-SERIES CURVES  |  SEVERITY HEATMAP  |  FLASK & PANDAS PIPELINE', 1510, 79);
+
+        // Window 1: Left - Daily Trends Curves
+        const w1X = 60;
+        const w1Y = 135;
+        const w1W = 860;
+        const w1H = 690;
+        drawWindowFrame(ctx, w1X, w1Y, w1W, w1H, 'Epidemiological 7-Day Rolling Average Trends // Python Matplotlib');
+        ctx.save();
+        roundRect(ctx, w1X + 10, w1Y + 52, w1W - 20, w1H - 62, 8);
+        ctx.clip();
+        ctx.drawImage(covidTrends, w1X + 10, w1Y + 52, w1W - 20, w1H - 62);
+        ctx.restore();
+
+        // Window 2: Right - Heatmap Analysis
+        const w2X = 945;
+        const w2Y = 135;
+        const w2W = 595;
+        const w2H = 690;
+        drawWindowFrame(ctx, w2X, w2Y, w2W, w2H, 'Country & Age Severity Distribution Heatmap');
+        ctx.save();
+        roundRect(ctx, w2X + 10, w2Y + 52, w2W - 20, w2H - 62, 8);
+        ctx.clip();
+        ctx.drawImage(covidHeatmap, w2X + 10, w2Y + 52, w2W - 20, w2H - 62);
+        ctx.restore();
+
+        // Bottom banner
+        ctx.fillStyle = 'rgba(10, 17, 30, 0.9)';
+        roundRect(ctx, 60, 845, 1480, 38, 8);
+        ctx.fill();
+        ctx.font = '600 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#10b981';
+        ctx.textAlign = 'center';
+        ctx.fillText('AUTHORED BY NEHAL KAMAL  •  AUTHENTIC GITHUB SYSTEM @NEHALKAMAL7/COVID-19-DATA-ANALYSIS  •  FULL-STACK FLASK & PANDAS', 800, 869);
+
+        await sendToServer(canvas, 'covid-analytics.jpg');
+      }
+
+      status.innerText = '✅ ALL 5 PROJECT SHOWCASE IMAGES RENDERED & SAVED TO public/projects/ SUCCESSFULLY!';
+      status.style.color = '#34d399';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAll().catch(err => {
+        document.getElementById('status').innerText = 'Error: ' + err.message;
+        document.getElementById('status').style.color = '#ef4444';
+      });
+    });
+  </script>
+</body>
+</html>

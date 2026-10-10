@@ -1,7 +1,7 @@
 // tailwind.config.cjs
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // enable class-based dark mode
+  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
@@ -9,14 +9,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#F8F8F6',
-        text: '#111111',
-        border: '#E5E5E0',
-        accent: '#D2F800', // electric lime
+        background: '#f8fafc',
+        text: '#0f172a',
+        border: '#e2e8f0',
+        accent: '#2563eb', // electric cyber blue
       },
       fontFamily: {
-        sans: ['Inter Tight', 'sans-serif'],
-        serif: ['Syne', 'serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        display: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+        serif: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
     },

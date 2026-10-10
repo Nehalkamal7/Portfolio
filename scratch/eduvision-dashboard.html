@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1600, height=900">
+  <title>EDUvision // Classroom Intelligence & AI Socratic Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 1600px;
+      height: 900px;
+      background: #070a13;
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .glow-1 {
+      position: absolute;
+      top: -120px;
+      right: 120px;
+      width: 700px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.16) 0%, rgba(2, 132, 199, 0) 70%);
+      pointer-events: none;
+    }
+    .glow-2 {
+      position: absolute;
+      bottom: -150px;
+      left: 150px;
+      width: 650px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(56, 189, 248, 0) 70%);
+      pointer-events: none;
+    }
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    /* Header */
+    header {
+      height: 72px;
+      background: rgba(13, 19, 33, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      z-index: 10;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #0284c7, #1d4ed8);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(2, 132, 199, 0.5);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+    .session-info {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .session-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      background: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+    .sys-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .badge {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: #cbd5e1;
+    }
+    .badge-accent {
+      background: rgba(2, 132, 199, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 20px 36px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 5;
+    }
+
+    /* Top Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    .stat-card {
+      background: #0a0f1d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    .stat-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .stat-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+    }
+
+    /* Main 2-Column Split */
+    .content-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 880px 1fr;
+      gap: 20px;
+    }
+
+    /* Left: Real-Time Classroom CV & NFC */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .vision-card {
+      flex: 1;
+      background: #0a0f1d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+    }
+    .card-header {
+      height: 42px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .vision-viewport {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #101726 0%, #070b14 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* NFC Bottom Bar */
+    .nfc-strip {
+      height: 90px;
+      background: #0a0f1d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .nfc-logs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+    .log-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Right: Socratic AI Tutor & Knowledge Graph */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .tutor-card {
+      flex: 1;
+      background: #0a0f1d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+    }
+    .tutor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: center;
+    }
+    .chat-bubble {
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .chat-student {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      align-self: flex-end;
+      max-width: 88%;
+      color: #e2e8f0;
+    }
+    .chat-ai {
+      background: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      align-self: flex-start;
+      max-width: 95%;
+      color: #f1f5f9;
+    }
+    .chat-formula {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin: 6px 0;
+      color: #38bdf8;
+      font-size: 11px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    /* Knowledge Graph & Mastery */
+    .mastery-card {
+      height: 180px;
+      background: #0a0f1d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .progress-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .p-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .p-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .p-track {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .p-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
+      border-radius: 99px;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+  <div class="grid-bg"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+      </div>
+      <div class="brand-title">
+        EDUvision OS
+        <span class="brand-tag">CLASSROOM INTELLIGENCE</span>
+      </div>
+    </div>
+
+    <div class="session-info">
+      <div class="session-item">
+        <div class="dot-live"></div>
+        <span style="color: #38bdf8; font-weight: 600;">CLASS LAB-402</span>
+      </div>
+      <div class="session-item">
+        <span>CURRICULUM:</span>
+        <span style="color: #f8fafc; font-weight: 600;">EGYPT STEM // GRADE 10</span>
+      </div>
+      <div class="session-item">
+        <span>STATUS:</span>
+        <span style="color: #38bdf8; font-weight: 600;">ACTIVE PROCTORING &amp; RAG</span>
+      </div>
+    </div>
+
+    <div class="sys-badges">
+      <div class="badge">RETINAFACE ACTIVE</div>
+      <div class="badge">NFC READER: ESP32</div>
+      <div class="badge badge-accent">FAISS RAG: v2.4</div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main>
+    <!-- Top Stat Widgets -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-meta">
+          <span class="stat-label">CLASS FOCUS INDEX</span>
+          <span class="stat-value">92.4%</span>
+        </div>
+        <div class="stat-pill">+4.1% OPTIMAL</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-meta">
+          <span class="stat-label">NFC SMART ATTENDANCE</span>
+          <span class="stat-value">34/35</span>
+        </div>
+        <div class="stat-pill">97.1% PRESENT</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-meta">
+          <span class="stat-label">ACTIVE AI TUTOR SESSIONS</span>
+          <span class="stat-value">18 LABS</span>
+        </div>
+        <div class="stat-pill">&lt;110ms INFERENCE</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-meta">
+          <span class="stat-label">TOPIC MASTERY RATE</span>
+          <span class="stat-value">88.5%</span>
+        </div>
+        <div class="stat-pill">STEM TOP 5%</div>
+      </div>
+    </div>
+
+    <!-- Main 2-Column Split -->
+    <div class="content-grid">
+      <!-- Left Column: Real-Time Classroom Computer Vision Stream -->
+      <div class="left-col">
+        <div class="vision-card">
+          <div class="card-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M15 10l5-5v14l-5-5"></path><rect x="2" y="6" width="13" height="12" rx="2"></rect></svg>
+              <span style="color: #ffffff; font-weight: 600;">LIVE CLASSROOM CV STREAM • RETINAFACE &amp; BYTETRACK</span>
+            </div>
+            <div style="color: #38bdf8; font-weight: 600;">MULTI-STUDENT HEAD POSE &amp; ATTENTION ROSTER</div>
+          </div>
+
+          <div class="vision-viewport">
+            <!-- Simulated Classroom Camera Stream with Student Trackers -->
+            <svg width="860" height="340" viewBox="0 0 860 340" fill="none">
+              <!-- Classroom Perspective Desks -->
+              <rect width="860" height="340" fill="#090d18"/>
+              <line x1="0" y1="180" x2="860" y2="180" stroke="rgba(255,255,255,0.04)"/>
+              <line x1="0" y1="280" x2="860" y2="280" stroke="rgba(255,255,255,0.06)"/>
+
+              <!-- Student 1 (Left Desk) -->
+              <g transform="translate(100, 70)">
+                <!-- Silhouette -->
+                <ellipse cx="90" cy="110" rx="35" ry="42" fill="#1e293b" stroke="rgba(56,189,248,0.3)" stroke-width="1.5"/>
+                <path d="M 40 220 C 40 160 70 150 90 148 C 110 150 140 160 140 220 Z" fill="#0f172a"/>
+                <!-- RetinaFace Bounding Box -->
+                <rect x="45" y="60" width="90" height="105" rx="6" stroke="#38bdf8" stroke-width="1.5" fill="rgba(2,132,199,0.08)"/>
+                <!-- Landmark Mesh Dots -->
+                <circle cx="78" cy="105" r="2.5" fill="#38bdf8"/><circle cx="102" cy="105" r="2.5" fill="#38bdf8"/>
+                <circle cx="90" cy="120" r="2" fill="#38bdf8"/>
+                <!-- Bounding Box Tag -->
+                <rect x="45" y="38" width="118" height="20" rx="4" fill="rgba(2,132,199,0.9)"/>
+                <text x="50" y="52" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700">ST-104 // FOCUS: 96%</text>
+                <!-- Status -->
+                <rect x="45" y="170" width="84" height="18" rx="4" fill="rgba(15,23,42,0.8)" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+                <text x="52" y="183" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600">STATE: ENGAGED</text>
+              </g>
+
+              <!-- Student 2 (Center Desk) -->
+              <g transform="translate(340, 50)">
+                <!-- Silhouette -->
+                <ellipse cx="100" cy="120" rx="40" ry="48" fill="#1e293b" stroke="rgba(56,189,248,0.4)" stroke-width="1.5"/>
+                <path d="M 40 240 C 40 175 75 165 100 162 C 125 165 160 175 160 240 Z" fill="#0f172a"/>
+                <!-- RetinaFace Bounding Box -->
+                <rect x="50" y="65" width="100" height="115" rx="6" stroke="#38bdf8" stroke-width="2" fill="rgba(2,132,199,0.1)"/>
+                <!-- Landmarks -->
+                <circle cx="86" cy="115" r="3" fill="#38bdf8"/><circle cx="114" cy="115" r="3" fill="#38bdf8"/>
+                <circle cx="100" cy="132" r="2.5" fill="#38bdf8"/>
+                <circle cx="100" cy="150" r="2.5" fill="#38bdf8"/>
+                <!-- Gaze ray vector forward -->
+                <line x1="86" y1="115" x2="80" y2="70" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 2"/>
+                <line x1="114" y1="115" x2="120" y2="70" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 2"/>
+                <!-- Tag -->
+                <rect x="50" y="42" width="124" height="20" rx="4" fill="rgba(2,132,199,0.9)"/>
+                <text x="55" y="56" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700">ST-108 // FOCUS: 94%</text>
+                <!-- Status -->
+                <rect x="50" y="185" width="94" height="18" rx="4" fill="rgba(15,23,42,0.8)" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+                <text x="56" y="198" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600">STATE: ATTENTIVE</text>
+              </g>
+
+              <!-- Student 3 (Right Desk) -->
+              <g transform="translate(600, 70)">
+                <!-- Silhouette -->
+                <ellipse cx="90" cy="110" rx="35" ry="42" fill="#1e293b" stroke="rgba(56,189,248,0.3)" stroke-width="1.5"/>
+                <path d="M 40 220 C 40 160 70 150 90 148 C 110 150 140 160 140 220 Z" fill="#0f172a"/>
+                <!-- RetinaFace Bounding Box -->
+                <rect x="45" y="60" width="90" height="105" rx="6" stroke="#38bdf8" stroke-width="1.5" fill="rgba(2,132,199,0.08)"/>
+                <!-- Landmarks -->
+                <circle cx="78" cy="105" r="2.5" fill="#38bdf8"/><circle cx="102" cy="105" r="2.5" fill="#38bdf8"/>
+                <circle cx="90" cy="120" r="2" fill="#38bdf8"/>
+                <!-- Tag -->
+                <rect x="45" y="38" width="118" height="20" rx="4" fill="rgba(2,132,199,0.9)"/>
+                <text x="50" y="52" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700">ST-112 // FOCUS: 88%</text>
+                <!-- Status -->
+                <rect x="45" y="170" width="84" height="18" rx="4" fill="rgba(15,23,42,0.8)" stroke="rgba(56,189,248,0.4)" stroke-width="1"/>
+                <text x="52" y="183" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600">STATE: ACTIVE</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- NFC Hardware Attendance Strip -->
+        <div class="nfc-strip">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+            <span style="color: #94a3b8; font-weight: 600;">HARDWARE NFC ATTENDANCE DAEMON (ESP32 SERIAL 9600 BAUD)</span>
+            <span style="color: #38bdf8; font-weight: 600;">ACTIVE READER // COM3</span>
+          </div>
+
+          <div class="nfc-logs">
+            <div class="log-item">
+              <span style="color: #38bdf8; font-weight: 700;">[09:02:14]</span>
+              <span style="color: #94a3b8;">UID: 4A:F2:88:C1 &rarr;</span>
+              <span style="color: #ffffff; font-weight: 600;">Youssef Mansour (ST-104)</span>
+              <span style="color: #38bdf8; font-size: 9px; margin-left: auto;">[VERIFIED]</span>
+            </div>
+            <div class="log-item">
+              <span style="color: #38bdf8; font-weight: 700;">[09:02:38]</span>
+              <span style="color: #94a3b8;">UID: 9C:14:D2:3A &rarr;</span>
+              <span style="color: #ffffff; font-weight: 600;">Mariam El-Sayed (ST-108)</span>
+              <span style="color: #38bdf8; font-size: 9px; margin-left: auto;">[VERIFIED]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Socratic AI Tutor Dialogue & Mastery Graph -->
+      <div class="right-col">
+        <!-- AI Tutor Dialogue Card -->
+        <div class="tutor-card">
+          <div class="tutor-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="color: #ffffff; font-weight: 700;">AI SOCRATIC TUTOR</span>
+              <span style="background: rgba(2,132,199,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 9px; padding: 2px 6px; border-radius: 4px;">FAISS RAG</span>
+            </div>
+            <span style="color: #64748b; font-size: 10px;">CONTEXT: EGYPT STEM PHYS-10</span>
+          </div>
+
+          <div class="chat-container">
+            <div class="chat-student">
+              <strong>Student:</strong> How do transformer attention heads calculate the Query, Key, and Value alignments?
+            </div>
+
+            <div class="chat-ai">
+              <strong>Seba AI Tutor:</strong><br>
+              Think of Q, K, and V as relational lookups in a high-dimensional vector space. The attention score is derived by computing:
+              <div class="chat-formula">
+                Attention(Q, K, V) = softmax( (Q &middot; K<sup>T</sup>) / &radic;d<sub>k</sub> ) &middot; V
+              </div>
+              The dot product quantifies semantic relevance, scaled by &radic;d<sub>k</sub> to maintain stable gradients before weighting value vectors.
+            </div>
+          </div>
+        </div>
+
+        <!-- Mastery Graph -->
+        <div class="mastery-card">
+          <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+            <span style="color: #94a3b8; font-weight: 600;">TOPIC MASTERY &amp; COGNITIVE PROGRESSION</span>
+            <span style="color: #38bdf8; font-weight: 600;">CURRICULUM AVG: 91.2%</span>
+          </div>
+
+          <div class="progress-bar-row">
+            <div class="p-bar">
+              <div class="p-meta">
+                <span style="color: #cbd5e1;">Neural Attention &amp; Vectors</span>
+                <span style="color: #38bdf8;">94%</span>
+              </div>
+              <div class="p-track"><div class="p-fill" style="width: 94%;"></div></div>
+            </div>
+            <div class="p-bar">
+              <div class="p-meta">
+                <span style="color: #cbd5e1;">Computer Vision &amp; RetinaFace</span>
+                <span style="color: #38bdf8;">89%</span>
+              </div>
+              <div class="p-track"><div class="p-fill" style="width: 89%;"></div></div>
+            </div>
+            <div class="p-bar">
+              <div class="p-meta">
+                <span style="color: #cbd5e1;">Mathematical Optimization</span>
+                <span style="color: #38bdf8;">92%</span>
+              </div>
+              <div class="p-track"><div class="p-fill" style="width: 92%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
