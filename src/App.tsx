@@ -134,9 +134,9 @@ function App() {
 
 export default App;
 
-import { motion } from 'framer-motion';
 
-const techIcons = [
+
+
   { src: '/icons/pytorch.svg', alt: 'PyTorch' },
   { src: '/icons/huggingface.svg', alt: 'Hugging Face' },
   { src: '/icons/gemini.svg', alt: 'Gemini' },
@@ -206,7 +206,7 @@ function App() {
 
 export default App;
 
-import heroImg from './assets/hero.png'
+
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
