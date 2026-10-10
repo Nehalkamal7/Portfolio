@@ -137,6 +137,7 @@ export default App;
 
 
 
+const techIcons = [
   { src: '/icons/pytorch.svg', alt: 'PyTorch' },
   { src: '/icons/huggingface.svg', alt: 'Hugging Face' },
   { src: '/icons/gemini.svg', alt: 'Gemini' },
@@ -144,6 +145,7 @@ export default App;
   { src: '/icons/langchain.svg', alt: 'LangChain' },
   { src: '/icons/cuda.svg', alt: 'CUDA' },
 ];
+
 
 function App() {
   return (
@@ -204,24 +206,7 @@ function App() {
   );
 }
 
-export default App;
 
-
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
         <div>
           <h1>Get started</h1>
           <p>
