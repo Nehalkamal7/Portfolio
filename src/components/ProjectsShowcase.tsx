@@ -117,6 +117,10 @@ export const ProjectsShowcase: React.FC = () => {
     };
   }, [projects, selectedProject]);
 
+  if (projects.length === 0) {
+    return null;
+  }
+
   return (
     <section id="systems" className="py-24 sm:py-32 bg-background border-t border-border">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -146,7 +150,7 @@ export const ProjectsShowcase: React.FC = () => {
         </div>
 
         {/* Filter Pills */}
-        {projects.length > 0 && filterCategories.length > 1 && (
+        {filterCategories.length > 1 && (
           <div className="flex flex-wrap items-center gap-2 mb-12">
             {filterCategories.map((filter) => (
               <button
@@ -166,26 +170,7 @@ export const ProjectsShowcase: React.FC = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {projects.length === 0 ? (
-            <div className="col-span-full py-16 px-6 text-center rounded-2xl border border-dashed border-border bg-card/40">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
-                <Layers className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-foreground mb-1">
-                No Projects Listed Yet
-              </h3>
-              <p className="font-mono text-xs text-muted max-w-sm mx-auto">
-                Projects will appear here dynamically once added to <code className="text-foreground">src/data/projects.json</code>.
-              </p>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="col-span-full py-16 px-6 text-center rounded-2xl border border-dashed border-border bg-card/40">
-              <p className="font-mono text-xs text-muted">
-                No projects found in category "{activeFilter}".
-              </p>
-            </div>
-          ) : (
-            filtered.map((proj) => (
+          {filtered.map((proj) => (
               <div
                 key={proj.id}
                 onClick={() => handleOpenProject(proj)}
@@ -324,8 +309,7 @@ export const ProjectsShowcase: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))
-          )}
+            ))}
         </div>
       </div>
 

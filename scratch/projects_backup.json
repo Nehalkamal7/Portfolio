@@ -1,0 +1,764 @@
+[
+  {
+    "title": "EDUvision",
+    "description": "Comprehensive smart education platform with personalized learning, student comprehension analytics, FAISS vector search, and intelligent educational assistant agents.",
+    "tags": [
+      "TypeScript",
+      "FastAPI",
+      "FAISS",
+      "Python",
+      "React",
+      "AI Agents",
+      "OpenCV",
+      "ESP32"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/EDUvision",
+    "imageUrl": "/projects/eduvision.jpg?v=9",
+    "id": "eduvision",
+    "category": "EDTECH & AGENTS",
+    "tagline": "Smart Adaptive AI Tutoring & Learning Platform",
+    "featured": true,
+    "architecture": [
+      "RetinaFace 60 FPS face detection & 68-point biometric landmark mesh",
+      "ArcFace facial cosine embeddings & ByteTrack multi-target object tracking",
+      "FAISS vector similarity retrieval over Egyptian STEM curriculum",
+      "Thoth Socratic AI dialogue engine with Qwen-2.5-Coder & KaTeX math reasoning",
+      "Hardware ESP32/RC522 NFC attendance scanner bridge over COM serial"
+    ],
+    "metrics": [
+      {
+        "label": "Class Focus Index",
+        "value": "96.8%"
+      },
+      {
+        "label": "NFC Attendance",
+        "value": "35 / 35"
+      },
+      {
+        "label": "Vector Index",
+        "value": "24.5K"
+      },
+      {
+        "label": "Inference FPS",
+        "value": "60 FPS"
+      }
+    ],
+    "stars": 38,
+    "forks": 12,
+    "languages": [
+      {
+        "name": "TypeScript",
+        "percentage": 44,
+        "color": "#3178c6"
+      },
+      {
+        "name": "Python",
+        "percentage": 36,
+        "color": "#3572A5"
+      },
+      {
+        "name": "FastAPI",
+        "percentage": 12,
+        "color": "#059669"
+      },
+      {
+        "name": "Tailwind CSS",
+        "percentage": 8,
+        "color": "#38bdf8"
+      }
+    ],
+    "overview": "EDUvision is the next evolution of AI-driven EdTech, tailored to the Egyptian STEM curriculum and modern digital classrooms. It converges real-time computer vision proctoring, hardware IoT RFID/NFC attendance logging, and a cognitive Socratic AI tutor grounded with FAISS vector embeddings and Qwen-2.5-Coder. Rather than merely supplying direct answers, the Socratic tutor guides students through deductive reasoning steps and mathematical proofs while actively auditing cognitive engagement.",
+    "problemSolved": "Traditional online classrooms lack physiological engagement auditing, allowing cognitive drift and cheating, while static LMS chatbots hallucinate ungrounded answers. EDUvision bridges physical attendance via ESP32 hardware, monitors cognitive focus via RetinaFace and 3D head-pose telemetry, and guarantees zero-hallucination pedagogical reasoning using vector-grounded curriculum retrieval.",
+    "keyFeatures": [
+      {
+        "title": "RetinaFace 3D Mesh Proctoring",
+        "desc": "High-frequency 60 FPS face detection, 68-point neural landmark mesh, and ArcFace biometric cosine verification with anti-spoofing."
+      },
+      {
+        "title": "Thoth Socratic Reasoning Agent",
+        "desc": "Adaptive RAG tutor grounded on Egyptian STEM textbooks using FAISS vector indexing to challenge students through deductive prompts."
+      },
+      {
+        "title": "Hardware NFC Attendance Bridge",
+        "desc": "ESP32 microcontroller integration over UART COM serial at 9600 baud rate with Mifare RFID card scanning and automated classroom roster logging."
+      },
+      {
+        "title": "30-Min Real-Time Attention Dynamics",
+        "desc": "Live WebSockets telemetry streaming rolling focus curves, head pose stability metrics, and concept progression trees."
+      }
+    ]
+  },
+  {
+    "title": "Nexus-OS",
+    "description": "A comprehensive AI-powered Business Operating System that unifies Projects, CRM, HR, Finance, Documents, Analytics, and Enterprise AI into a modular, plugin-based SaaS platform with NOVA intelligent copilot.",
+    "tags": [
+      "TypeScript",
+      "React",
+      "FastAPI",
+      "AI Agents",
+      "PostgreSQL",
+      "Docker"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/Nexus-OS",
+    "imageUrl": "/projects/nexus-os.jpg",
+    "id": "nexus-os",
+    "category": "ENTERPRISE & AGENTS",
+    "tagline": "AI Business Operating System & NOVA Copilot",
+    "featured": true,
+    "architecture": [
+      "NOVA Autonomous Copilot with multi-tool calling & function execution",
+      "Modular plugin architecture (CRM, HR, Finance, Projects, Documents)",
+      "Real-time analytics & pipeline revenue forecasting engine",
+      "Enterprise permission matrix & multi-tenant database isolation"
+    ],
+    "metrics": [
+      {
+        "label": "Architecture",
+        "value": "Modular SaaS"
+      },
+      {
+        "label": "Copilot",
+        "value": "NOVA Agent"
+      },
+      {
+        "label": "Response",
+        "value": "<180ms"
+      },
+      {
+        "label": "Tenants",
+        "value": "Multi-Org"
+      }
+    ],
+    "stars": 29,
+    "forks": 8,
+    "languages": [
+      {
+        "name": "TypeScript",
+        "percentage": 48,
+        "color": "#3178c6"
+      },
+      {
+        "name": "Python",
+        "percentage": 32,
+        "color": "#3572A5"
+      },
+      {
+        "name": "PostgreSQL",
+        "percentage": 12,
+        "color": "#336791"
+      },
+      {
+        "name": "Docker",
+        "percentage": 8,
+        "color": "#2496ed"
+      }
+    ],
+    "overview": "Nexus-OS is an enterprise AI Business Operating System designed as an all-in-one modular SaaS workspace. It converges CRM, Projects, HR, Finance, Documents, Analytics, and Autonomous Enterprise Copilots into a single unified reactive web application powered by the NOVA AI agent.",
+    "problemSolved": "SaaS fragmentation causes high software license costs and disconnected data silos. Nexus-OS solves this by uniting company operations into one reactive, agent-augmented workspace with single sign-on and cross-domain tool execution.",
+    "keyFeatures": [
+      {
+        "title": "NOVA Autonomous Copilot",
+        "desc": "Multi-tool agent capable of executing SQL queries, drafting customer communications, and forecasting revenue pipeline."
+      },
+      {
+        "title": "Modular Plugin Architecture",
+        "desc": "Decoupled domain modules (CRM, HR, Accounting, Project Timelines) supporting multi-tenant isolation."
+      },
+      {
+        "title": "Real-Time KPI Forecasting",
+        "desc": "Time-series predictive analytics forecasting deals in stage, burn rate, and resource allocation."
+      }
+    ]
+  },
+  {
+    "title": "DevGuard",
+    "description": "Automated static code security and vulnerability diagnostics engine powered by fine-tuned Qwen2.5-Coder SLM (PEFT/QLoRA) combined with deterministic AST parsing.",
+    "tags": [
+      "PEFT/QLoRA",
+      "Qwen2.5-Coder",
+      "Static Analysis",
+      "AST",
+      "Python",
+      "Security"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/DevGuard",
+    "imageUrl": "/projects/devguard.jpg",
+    "id": "devguard",
+    "category": "SECURITY & CODE",
+    "tagline": "Automated Code Security & Static Vulnerability Engine",
+    "featured": true,
+    "architecture": [
+      "AST static dependency & taint analysis tree parsing",
+      "Fine-tuned Qwen2.5-Coder SLM for vulnerability classification",
+      "CVE matching & severity scoring matrix with CWE-120 tracking",
+      "Automated AST-safe code patch synthesis and remediation diffs"
+    ],
+    "metrics": [
+      {
+        "label": "Security Score",
+        "value": "88% Audit"
+      },
+      {
+        "label": "Scan Time",
+        "value": "<12s"
+      },
+      {
+        "label": "Zero-Day Detection",
+        "value": "Verified"
+      },
+      {
+        "label": "Quantization",
+        "value": "4-Bit QLoRA"
+      }
+    ],
+    "stars": 24,
+    "forks": 6,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 65,
+        "color": "#3572A5"
+      },
+      {
+        "name": "C/C++",
+        "percentage": 20,
+        "color": "#555555"
+      },
+      {
+        "name": "Shell",
+        "percentage": 15,
+        "color": "#89e051"
+      }
+    ],
+    "overview": "DevGuard is an automated static code security and vulnerability diagnostics platform powered by fine-tuned Small Language Models (Qwen2.5-Coder via PEFT/QLoRA) paired with deterministic Abstract Syntax Tree (AST) analyzers.",
+    "problemSolved": "Traditional regex linters generate excessive false positives, while cloud LLMs risk exposing proprietary source code. DevGuard runs locally with a 4-bit quantized SLM, detecting zero-day memory leaks, buffer overflows, and injection flaws in seconds.",
+    "keyFeatures": [
+      {
+        "title": "Hybrid AST & Neural Taint Analysis",
+        "desc": "Traces untrusted user inputs across control-flow graphs to pinpoint injection, buffer overflow, and memory vulnerabilities."
+      },
+      {
+        "title": "Fine-Tuned SLM Code Auditor",
+        "desc": "Qwen2.5-Coder quantized with 4-bit QLoRA, delivering near-zero false positive vulnerability classifications."
+      },
+      {
+        "title": "Automated Remediation Diffs",
+        "desc": "Generates verified, AST-safe code remediation diffs ready for direct pull-request integration."
+      }
+    ]
+  },
+  {
+    "title": "docugraph",
+    "description": "Context engineering platform for evaluating semantic chunking strategies, 3D vector embeddings, and cross-encoder retrieval coherence over complex technical documents.",
+    "tags": [
+      "RAG Pipeline",
+      "Vector Database",
+      "NLP",
+      "Embeddings",
+      "FastAPI",
+      "Python"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/docugraph",
+    "imageUrl": "/projects/docugraph.jpg",
+    "id": "docugraph",
+    "category": "RAG & RETRIEVAL",
+    "tagline": "Interactive RAG Ingestion & Chunking Diagnostics Workbench",
+    "featured": true,
+    "architecture": [
+      "Document semantic chunking visualizer with boundary scoring",
+      "3D vector embedding cluster projection graph with cosine distance",
+      "Cross-encoder cosine similarity & relevance matrix diagnostics",
+      "Context compression pipeline saving up to 52% prompt tokens"
+    ],
+    "metrics": [
+      {
+        "label": "Recall@5",
+        "value": "99.2%"
+      },
+      {
+        "label": "Chunks Evaluated",
+        "value": "1,450+"
+      },
+      {
+        "label": "Context Saved",
+        "value": "52%"
+      },
+      {
+        "label": "Embedding Space",
+        "value": "3D Clusters"
+      }
+    ],
+    "stars": 19,
+    "forks": 4,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 58,
+        "color": "#3572A5"
+      },
+      {
+        "name": "TypeScript",
+        "percentage": 28,
+        "color": "#3178c6"
+      },
+      {
+        "name": "FastAPI",
+        "percentage": 14,
+        "color": "#059669"
+      }
+    ],
+    "overview": "docugraph is an interactive RAG context engineering and chunking diagnostics workbench designed for evaluating dense vector retrieval, evaluating boundary chunk coherence, and inspecting 3D embedding cluster distributions over complex technical documentation.",
+    "problemSolved": "Blind chunking leads to severed context and RAG retrieval failure. docugraph visualizes semantic chunk boundaries, token losses, and cross-encoder rerank dynamics to guarantee high precision in enterprise search.",
+    "keyFeatures": [
+      {
+        "title": "Semantic Boundary Scoring",
+        "desc": "Evaluates recursive vs. semantic chunk boundaries with token consumption metrics and loss graphs."
+      },
+      {
+        "title": "Context Compression Engine",
+        "desc": "Computes cross-attention reranking scores and token compression algorithms saving up to 52% prompt tokens."
+      },
+      {
+        "title": "3D Vector Embedding Space",
+        "desc": "Interactive projection of high-dimensional document vectors into 3D clusters with cosine distance inspection."
+      }
+    ]
+  },
+  {
+    "title": "HATHEQ-PROJECT",
+    "description": "AI healthcare vision system analyzing attention levels in real time. Monitors facial expressions, eye movements, and gaze direction to support early ADHD assessment and focus monitoring.",
+    "tags": [
+      "Computer Vision",
+      "OpenCV",
+      "Deep Learning",
+      "Python",
+      "Docker",
+      "Healthcare AI"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/HATHEQ-PROJECT",
+    "imageUrl": "/projects/hatheq.jpg?v=4",
+    "id": "hatheq",
+    "category": "COMPUTER VISION",
+    "tagline": "Real-Time Attention & Gaze Analysis for ADHD Assessment",
+    "featured": true,
+    "architecture": [
+      "104 3D facial landmark mesh detection pipeline",
+      "Sub-millimeter pupil diameter & micro-saccade tracking",
+      "3D gaze direction vector estimation and focal stability",
+      "Long-term cognitive focus continuity & clinical reporting"
+    ],
+    "metrics": [
+      {
+        "label": "Focus Accuracy",
+        "value": "94%"
+      },
+      {
+        "label": "Frame Rate",
+        "value": "30+ FPS"
+      },
+      {
+        "label": "Assessment",
+        "value": "Non-Invasive"
+      },
+      {
+        "label": "Mesh Points",
+        "value": "104 Landmark"
+      }
+    ],
+    "stars": 22,
+    "forks": 5,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 70,
+        "color": "#3572A5"
+      },
+      {
+        "name": "Dart/Flutter",
+        "percentage": 20,
+        "color": "#00B4AB"
+      },
+      {
+        "name": "Shell",
+        "percentage": 10,
+        "color": "#89e051"
+      }
+    ],
+    "overview": "HATHEQ is an AI-driven healthcare computer vision application focused on pediatric attention tracking and early ADHD assessment. By tracking sub-millimeter pupil diameter changes, micro-saccades, and 104 facial landmarks during interactive tasks, HATHEQ provides objective, non-invasive attention analytics.",
+    "problemSolved": "Subjective behavioral questionnaires often result in delayed or inconsistent ADHD diagnoses. HATHEQ introduces non-invasive, camera-based cognitive biomarker tracking to assist clinicians with objective attention metrics.",
+    "keyFeatures": [
+      {
+        "title": "104 3D Facial Landmark Mesh",
+        "desc": "Sub-millimeter facial mesh detection for micro-expression classification and fatigue indicators."
+      },
+      {
+        "title": "Pupil Diameter & Gaze Tracking",
+        "desc": "Real-time eye-tracking measuring gaze fixation latency and saccadic dispersion on screen."
+      },
+      {
+        "title": "Objective Clinical Telemetry",
+        "desc": "Generates non-invasive, objective focus continuity scores and exportable telemetry for specialists."
+      }
+    ]
+  },
+  {
+    "title": "SchemaForge",
+    "description": "High-precision Text-to-SQL synthesis engine with relational schema awareness, static anti-pattern linting, and execution cost profiling with automated index recommendations.",
+    "tags": [
+      "Text-to-SQL",
+      "AI Agents",
+      "SQL Optimization",
+      "Data Engineering",
+      "PostgreSQL"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/SchemaForge",
+    "imageUrl": "/projects/schemaforge.jpg",
+    "id": "schemaforge",
+    "category": "DATA & AGENTS",
+    "tagline": "DDL-Grounded Text-to-SQL Synthesizer & Profiler",
+    "featured": true,
+    "architecture": [
+      "DDL relational schema graph linking & typing",
+      "Natural language intent to optimized SQL translation",
+      "Query cost timeline profiling with CPU & I/O telemetry",
+      "Automated database index optimization recommendations"
+    ],
+    "metrics": [
+      {
+        "label": "Schema Health",
+        "value": "91%"
+      },
+      {
+        "label": "Execution",
+        "value": "124ms"
+      },
+      {
+        "label": "SQL Injection",
+        "value": "Zero Risk"
+      },
+      {
+        "label": "Cost Savings",
+        "value": "62%"
+      }
+    ],
+    "stars": 31,
+    "forks": 9,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 45,
+        "color": "#3572A5"
+      },
+      {
+        "name": "TypeScript",
+        "percentage": 35,
+        "color": "#3178c6"
+      },
+      {
+        "name": "SQL",
+        "percentage": 20,
+        "color": "#e38c00"
+      }
+    ],
+    "overview": "SchemaForge is a DDL-grounded Text-to-SQL synthesis engine with relational schema awareness, static anti-pattern linting, query execution cost profiling, and automated database index recommendations.",
+    "problemSolved": "Generic LLMs frequently produce syntactically valid yet structurally invalid or catastrophically slow SQL queries. SchemaForge verifies queries against relational DDL constraints and generates covering indexes to protect databases from unbounded scans.",
+    "keyFeatures": [
+      {
+        "title": "DDL Relational Graph Linking",
+        "desc": "Constructs an in-memory graph of foreign key relationships, primary keys, and table schemas."
+      },
+      {
+        "title": "Cost Curve & Execution Profiler",
+        "desc": "Predicts query execution complexity (I/O, CPU, memory) before database execution."
+      },
+      {
+        "title": "Automated Index Synthesizer",
+        "desc": "Recommends covering and composite indexes to optimize slow joins and aggregation queries."
+      }
+    ]
+  },
+  {
+    "title": "Smart Attendance System",
+    "description": "Biometric face recognition system with real-time multi-person tracking, minimalist camera UI, deep learning embeddings, and a Flask dashboard for attendance history.",
+    "tags": [
+      "Python",
+      "OpenCV",
+      "Face Recognition",
+      "Deep Learning",
+      "Flask"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/smart_attendance_system",
+    "imageUrl": "/projects/smart-attendance.jpg",
+    "id": "smart-attendance",
+    "category": "COMPUTER VISION",
+    "tagline": "High-Performance Face Recognition & Attendance Engine",
+    "featured": true,
+    "architecture": [
+      "Deep learning facial embedding generation & cosine matching",
+      "Real-time multi-face bounding box tracking",
+      "Anti-spoofing verification checks",
+      "Automated timestamp logging & exportable reporting"
+    ],
+    "metrics": [
+      {
+        "label": "Recognition",
+        "value": "99.1%"
+      },
+      {
+        "label": "Inference",
+        "value": "Real-Time"
+      },
+      {
+        "label": "Backend",
+        "value": "Flask UI"
+      },
+      {
+        "label": "Storage",
+        "value": "SQLite Logs"
+      }
+    ],
+    "stars": 18,
+    "forks": 4,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 85,
+        "color": "#3572A5"
+      },
+      {
+        "name": "HTML/CSS",
+        "percentage": 15,
+        "color": "#e34c26"
+      }
+    ],
+    "overview": "High-performance biometric face recognition system featuring real-time multi-person camera tracking, deep learning cosine embeddings, automated anti-spoofing verification, and a lightweight Flask dashboard with persistent SQLite attendance history.",
+    "problemSolved": "Manual roll calls waste valuable instructional time and suffer from buddy punching. This system automates attendance logging with sub-second facial recognition and cosine distance verification.",
+    "keyFeatures": [
+      {
+        "title": "Deep Cosine Embeddings",
+        "desc": "Generates facial vector embeddings and matches enrolled profiles with 99.1% precision."
+      },
+      {
+        "title": "Anti-Spoofing Verification",
+        "desc": "Liveness verification prevents photo and video playback bypasses."
+      },
+      {
+        "title": "Automated Flask Reporting",
+        "desc": "Exportable CSV logs and attendance dashboards with exact timestamps."
+      }
+    ]
+  },
+  {
+    "title": "E-Commerce ML Analytics",
+    "description": "Machine learning analytics platform delivering customer RFM segmentation, lifetime value forecasting, and actionable purchase propensity clustering.",
+    "tags": [
+      "Python",
+      "Scikit-Learn",
+      "Pandas",
+      "Matplotlib",
+      "Jupyter Notebook"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/ECOMMERCE-ANALYTICS",
+    "imageUrl": "/projects/ecommerce-analytics.jpg",
+    "id": "ecommerce-analytics",
+    "category": "DATA & ML",
+    "tagline": "Customer Segmentation & Predictive Modeling Engine",
+    "featured": true,
+    "architecture": [
+      "RFM (Recency, Frequency, Monetary) data feature engineering",
+      "K-Means clustering for customer cohort segmentation",
+      "Predictive modeling for customer churn risk",
+      "Automated exploratory data analysis visualization"
+    ],
+    "metrics": [
+      {
+        "label": "Methodology",
+        "value": "K-Means + RFM"
+      },
+      {
+        "label": "Insights",
+        "value": "Predictive"
+      },
+      {
+        "label": "Stack",
+        "value": "Jupyter / ML"
+      },
+      {
+        "label": "Cohorts",
+        "value": "Optimized"
+      }
+    ],
+    "stars": 15,
+    "forks": 3,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 80,
+        "color": "#3572A5"
+      },
+      {
+        "name": "Jupyter Notebook",
+        "percentage": 20,
+        "color": "#DA5B0B"
+      }
+    ],
+    "overview": "Machine learning analytics platform delivering customer RFM segmentation, lifetime value forecasting, and actionable purchase propensity clustering over large transaction datasets.",
+    "problemSolved": "Generic marketing campaigns yield low conversion rates. By engineering Recency, Frequency, and Monetary scores with K-Means clustering, businesses identify their highest-value cohorts and re-engage churn risks.",
+    "keyFeatures": [
+      {
+        "title": "RFM Feature Engineering",
+        "desc": "Aggregates transaction histories into robust customer behavior features."
+      },
+      {
+        "title": "K-Means Cohort Clustering",
+        "desc": "Unsupervised segmentation grouping customers into Champions, Loyalists, and Churn Risks."
+      },
+      {
+        "title": "Automated EDA Visuals",
+        "desc": "Interactive correlation heatmaps and cohort revenue contribution charts."
+      }
+    ]
+  },
+  {
+    "title": "SEBA Smart AI Tutor",
+    "description": "Adaptive tutoring system combining natural language processing and student knowledge evaluation to provide personalized learning assistance.",
+    "tags": [
+      "NLP",
+      "Transformers",
+      "FastAPI",
+      "React",
+      "Educational AI"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/SEBA-PROJECT",
+    "imageUrl": "/projects/seba.jpg",
+    "id": "seba-tutor",
+    "category": "EDTECH & AGENTS",
+    "tagline": "Adaptive Natural Language Educational Assistant",
+    "featured": true,
+    "architecture": [
+      "Natural language educational dialog parser",
+      "Contextual problem breakdown & hint generator",
+      "Student misconception diagnostic model",
+      "Adaptive curriculum mastery tracking"
+    ],
+    "metrics": [
+      {
+        "label": "Language",
+        "value": "Bilingual (Ar/En)"
+      },
+      {
+        "label": "Model",
+        "value": "Fine-Tuned NLP"
+      },
+      {
+        "label": "Platform",
+        "value": "Web Adaptive"
+      },
+      {
+        "label": "Pedagogy",
+        "value": "Socratic"
+      }
+    ],
+    "stars": 17,
+    "forks": 4,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 60,
+        "color": "#3572A5"
+      },
+      {
+        "name": "JavaScript",
+        "percentage": 40,
+        "color": "#f1e05a"
+      }
+    ],
+    "overview": "Bilingual (Arabic/English) AI study assistant and adaptive learning portal tailored for Egyptian curricula. Guides students through step-by-step math problem solving and concept remediation using Socratic educational NLP models.",
+    "problemSolved": "Students often get stuck on homework problems without personalized guidance. SEBA diagnoses misunderstandings and generates contextual hints rather than direct solutions.",
+    "keyFeatures": [
+      {
+        "title": "Bilingual Math Parser",
+        "desc": "Understands Arabic and English mathematical inquiries with algebraic expression parsing."
+      },
+      {
+        "title": "Misconception Diagnostics",
+        "desc": "Detects the exact conceptual step where a student faltered and offers targeted remediations."
+      },
+      {
+        "title": "Adaptive Learning Trajectory",
+        "desc": "Adjusts quiz complexity based on mastery retention scores."
+      }
+    ]
+  },
+  {
+    "title": "COVID-19 Analytics Dashboard",
+    "description": "Full-stack epidemiological analytics dashboard built with Python, Flask, Pandas, and Matplotlib. Simulates realistic dataset curves and serves interactive web graphs.",
+    "tags": [
+      "Python",
+      "Flask",
+      "Pandas",
+      "Matplotlib",
+      "Data Visualization"
+    ],
+    "repoUrl": "https://github.com/Nehalkamal7/COVID-19-data-analysis",
+    "imageUrl": "/projects/covid-analytics.jpg",
+    "id": "covid-analytics",
+    "category": "DATA & ML",
+    "tagline": "Full-Stack Data Simulation & Visualization Platform",
+    "featured": true,
+    "architecture": [
+      "Time-series statistical curve modeling",
+      "Dynamic chart rendering via Matplotlib & Flask",
+      "Interactive dashboard web frontend",
+      "Rolling 7-day average smoothing pipeline"
+    ],
+    "metrics": [
+      {
+        "label": "Architecture",
+        "value": "Full-Stack"
+      },
+      {
+        "label": "Data Engine",
+        "value": "Pandas"
+      },
+      {
+        "label": "Web UI",
+        "value": "Flask"
+      },
+      {
+        "label": "Smoothing",
+        "value": "7-Day Rolling"
+      }
+    ],
+    "stars": 14,
+    "forks": 3,
+    "languages": [
+      {
+        "name": "Python",
+        "percentage": 75,
+        "color": "#3572A5"
+      },
+      {
+        "name": "HTML/CSS",
+        "percentage": 25,
+        "color": "#e34c26"
+      }
+    ],
+    "overview": "Full-stack epidemiological data simulation and visualization portal built with Flask, Pandas, and Matplotlib. Analyzes infection trajectories, computes 7-day rolling averages, and maps transmission severity across geographical regions.",
+    "problemSolved": "Raw epidemiological tables are difficult for public understanding. This dashboard automates data smoothing and visualizes reproduction curves to illustrate outbreak trends clearly.",
+    "keyFeatures": [
+      {
+        "title": "7-Day Rolling Averages",
+        "desc": "Eliminates weekend reporting artifacts using moving average mathematical smoothing."
+      },
+      {
+        "title": "Dynamic Flask Rendering",
+        "desc": "Generates backend matplotlib figures served directly to an interactive responsive UI."
+      },
+      {
+        "title": "Regional Transmission Metrics",
+        "desc": "Comparative growth rates and severity classification metrics."
+      }
+    ]
+  }
+]
