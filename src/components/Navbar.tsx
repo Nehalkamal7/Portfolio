@@ -70,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
         </nav>
 
         {/* Right CTA & Controls */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           {/* Dark Mode Toggle */}
           <button
             onClick={() => setDarkMode(!darkMode)}
@@ -102,10 +102,10 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
         </div>
 
         {/* Mobile menu trigger */}
-        <div className="flex sm:hidden items-center gap-2">
+        <div className="flex md:hidden items-center gap-2">
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className="p-2 rounded-lg border border-border text-foreground"
+            className="p-2 rounded-lg border border-border text-foreground hover:bg-black/5 dark:hover:bg-white/5"
             aria-label="Toggle theme"
           >
             {darkMode ? <Sun className="w-4 h-4 text-accent" /> : <Moon className="w-4 h-4" />}
@@ -120,63 +120,90 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Fullscreen Navigation Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm sm:hidden">
-          <div className="w-4/5 max-w-sm h-full bg-card border-l border-border p-6 flex flex-col justify-between shadow-2xl">
-            <div>
-              <div className="flex items-center justify-between pb-6 border-b border-border">
-                <div className="flex items-center gap-2.5">
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-border ring-2 ring-accent/20 shrink-0 shadow-xs">
-                    <img
-                      src="/nehal.jpg?v=2"
-                      alt="Nehal Kamal"
-                      className="w-full h-full object-cover object-[center_15%]"
-                    />
-                  </div>
-                  <div className="font-serif font-bold text-lg text-foreground">
-                    NEHAL KAMAL
-                  </div>
+        <div
+          className="fixed inset-0 z-50 flex flex-col justify-between bg-[#070b14] text-slate-100 md:hidden p-6 sm:p-8 animate-in fade-in duration-200 overflow-y-auto"
+          style={{ backgroundColor: '#070b14' }}
+        >
+          <div>
+            {/* Top Bar inside Mobile Menu */}
+            <div className="flex items-center justify-between pb-6 border-b border-slate-800/80">
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-slate-700 ring-2 ring-sky-400/30 shrink-0 shadow-md">
+                  <img
+                    src="/nehal.jpg?v=2"
+                    alt="Nehal Kamal"
+                    className="w-full h-full object-cover object-[center_15%]"
+                  />
                 </div>
+                <div className="flex flex-col">
+                  <span className="font-serif font-bold text-lg text-white leading-tight">
+                    NEHAL KAMAL
+                  </span>
+                  <span className="font-mono text-[10px] text-sky-400 font-semibold uppercase tracking-wider">
+                    AI &amp; ML SYSTEMS
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setDarkMode(!darkMode)}
+                  className="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-300 hover:text-white transition-colors"
+                  aria-label="Toggle theme"
+                  title="Toggle Light/Dark Theme"
+                >
+                  {darkMode ? <Sun className="w-4 h-4 text-sky-400" /> : <Moon className="w-4 h-4 text-white" />}
+                </button>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-lg border border-border text-foreground hover:bg-accent hover:text-white dark:hover:text-slate-950 transition-colors"
+                  className="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                  aria-label="Close navigation"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
+            </div>
 
-              <div className="py-6 flex flex-col gap-4">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-base font-medium text-foreground hover:text-accent py-2 transition-colors flex items-center justify-between"
-                  >
+            {/* Navigation Links */}
+            <div className="py-8 flex flex-col gap-2">
+              {navLinks.map((link, idx) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-lg font-serif font-semibold text-slate-200 hover:text-sky-400 hover:bg-white/5 px-4 py-3 rounded-xl transition-all flex items-center justify-between group border border-transparent hover:border-slate-800"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-xs text-sky-400/60 group-hover:text-sky-400 font-normal">
+                      0{idx + 1} //
+                    </span>
                     <span>{link.name}</span>
-                    <ArrowUpRight className="w-4 h-4 text-muted" />
-                  </a>
-                ))}
-              </div>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </a>
+              ))}
             </div>
+          </div>
 
-            <div className="flex flex-col gap-3 pt-6 border-t border-border">
-              <a
-                href="/resume.pdf"
-                download
-                className="w-full text-center py-2.5 rounded-lg border border-border text-xs font-mono font-medium tracking-tight text-foreground"
-              >
-                DOWNLOAD CV / RESUME
-              </a>
-              <a
-                href="#contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-lg bg-accent text-white dark:text-slate-950 text-xs font-mono font-bold tracking-tight"
-              >
-                GET IN TOUCH
-              </a>
-            </div>
+          {/* Bottom Actions */}
+          <div className="flex flex-col gap-3 pt-6 border-t border-slate-800/80">
+            <a
+              href="/resume.pdf"
+              download
+              className="w-full text-center py-3 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-xs font-mono font-bold tracking-wider text-slate-200 transition-all flex items-center justify-center gap-2"
+            >
+              <span>DOWNLOAD CV / RESUME</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-mono font-bold tracking-wider transition-all shadow-lg shadow-sky-500/20"
+            >
+              GET IN TOUCH / INITIATE
+            </a>
           </div>
         </div>
       )}
