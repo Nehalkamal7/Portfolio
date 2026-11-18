@@ -5,7 +5,7 @@ import { HuggingFaceLogo } from './TechLogos';
 export const ContactSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const emailAddress = 'nehalnedeib@gmail.com';
+  const emailAddress = 'nehaledeib@gmail.com';
 
   const [formData, setFormData] = useState({
     name: '',
